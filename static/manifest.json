@@ -1,0 +1,25 @@
+{
+    "name": "Lu mercat",
+    "short_name": "Lu mercat",
+    "theme_color": "#E63946",
+    "background_color": "#F1FAEE",
+    "display": "fullscreen",
+    "scope": "/",
+    "start_url": "/",
+    "description": "Write, learn and run M68K assembly code on your browser. View registers and memory, step and undo the program.",
+    "icons": [
+        {
+            "src": "/images/favicon-16x16.png",
+            "sizes": "16x16",
+            "type": "image/png"
+        },{
+            "src": "/images/favicon-32x32.png",
+            "sizes": "32x32",
+            "type": "image/png"
+        },{
+            "src": "/images/favicon-96x96.png",
+            "sizes": "96x96",
+            "type": "image/png"
+        }
+    ]
+}

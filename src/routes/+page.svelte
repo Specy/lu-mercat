@@ -1,2 +1,24 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script lang="ts">
+	import Category from '$cmp/Category.svelte';
+	import Page from '$cmp/layout/Page.svelte';
+	import { categories } from '$stores/products';
+</script>
+
+<Page>
+	<h1>Categories</h1>
+	<div class="categories">
+        {#each $categories as category}
+            <Category {category} />
+        {/each}
+    </div>
+</Page>
+
+<style lang="scss">
+
+    .categories{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+    }
+</style>

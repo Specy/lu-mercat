@@ -1,8 +1,9 @@
 import { writable } from "svelte/store";
+import { api } from "./api/api";
 
 
 
-enum UserRole {
+export enum UserRole {
     Admin = "admin",
     Delegate = "delegate",
     Appointee = "appointee",
@@ -18,11 +19,23 @@ export type User = {
 
 
 function createUser(){
-    const { subscribe, set, update } = writable<User | null>(null);
+    const { subscribe, set, update } = writable<User | null>(null)
 
+    async function login(username: string, password: string) {
+        set(await api.login(username, password))
+    }
 
+    async function register(username: string, password: string, role: UserRole) {
+        set(await api.registerUser(username, password, role))
+    }
+    function logout(){
+        set(null)
+    }
 
-    function login(username: string, password: string) {
-
+    return {
+        subscribe,
+        login,
+        register,
+        logout
     }
 }
