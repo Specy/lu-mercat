@@ -3,4 +3,4 @@
 </script>
 
 
-Category {page.params.categoryId}
+Category {$page.params.categoryId}
