@@ -1,6 +1,9 @@
 {
 	"name": "lu-mercat",
 	"version": "0.0.1",
+	"engines": {
+		"node": ">16.14.0"
+	},
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
