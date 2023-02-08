@@ -1,6 +1,7 @@
 import { writable } from "svelte/store"
 import type { ProductToOrder } from "./orders"
 import { api } from "./api/api"
+import { browser } from "$app/environment"
 
 
 
@@ -21,9 +22,26 @@ export function createCartStore(){
             return cart
         })
     }
-    function removeProductFromCart(productId: string){
+    function reduceProductToCart(productId: string | ProductToOrder){
         update(cart => {
-            const productIndex = cart.findIndex(p => p.product.id === productId)
+            const id = typeof productId === 'string' ? productId : productId.product.id
+            const productIndex = cart.findIndex(p => p.product.id === id)
+            if(productIndex === -1) return cart
+            if(cart[productIndex].quantity === 1){
+                const elements = cart.splice(productIndex, 1)
+                elements.map(api.removeProductFromCart)
+                return cart
+            }
+            cart[productIndex].quantity -= 1
+            api.updateProductInCart(cart[productIndex])
+            return cart
+        })
+
+    }
+    function removeProductFromCart(productId: string | ProductToOrder){
+        update(cart => {
+            const id = typeof productId === 'string' ? productId : productId.product.id
+            const productIndex = cart.findIndex(p => p.product.id === id)
             if(productIndex === -1) return cart
             const elements = cart.splice(productIndex, 1)
             elements.map(api.removeProductFromCart)
@@ -42,13 +60,21 @@ export function createCartStore(){
     function setCart(cart: ProductToOrder[]){
         set(cart)
     }
+
+    async function sync(){
+        const products = await api.getUserCart()
+        set(products)
+    }
     return {
         subscribe,
         addProductToCart,
+        reduceProductToCart,
         removeProductFromCart,
         setCart,
-        updateProductQuantity
+        updateProductQuantity, 
+        sync
     }
 }
 
 export const cart = createCartStore()
+if(browser) cart.sync()

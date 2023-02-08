@@ -11,28 +11,28 @@
 		"strict": true,
 		"paths": {
 			"$lib": [
-				"src/lib/"
+				"./src/lib/"
 			],
 			"$lib/*": [
-				"src/lib/*"
+				"./src/lib/*"
 			],
 			"$cmp": [
-				"src/components/"
+				"./src/components/"
 			],
 			"$cmp/*": [
-				"src/components/*"
+				"./src/components/*"
 			],
 			"$stores": [
-				"src/stores/"
+				"./src/stores/"
 			],
 			"$stores/*": [
-				"src/stores/*"
+				"./src/stores/*"
 			],
 			"$utils": [
-				"src/utils/"
+				"./src/utils/"
 			],
 			"$utils/*": [
-				"src/utils/*"
+				"./src/utils/*"
 			]
 		}
 	},

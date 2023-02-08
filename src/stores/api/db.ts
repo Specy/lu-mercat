@@ -93,14 +93,15 @@ export class Db extends Dexie{
     async getUser(userName: string){
         return await this.users.get({username: userName})
     }
-    async getUserCart(userId: string){
-        const products = await this.userCart.where({userId}).toArray()
-        return products.map(async product => {
+    async getUserCart(){
+        const products = await this.userCart.toArray()
+        const parsed = await Promise.all(products.map(async product => {
             return {
                 quantity: product.quantity,
-                product: await this.products.get(product.productId)
+                product: await this.products.get(product.productId) as Product
             }
-        })
+        }))
+        return parsed
     }
     async removeProduct(productId: string){
         await this.products.delete(productId)

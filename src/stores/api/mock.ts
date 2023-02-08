@@ -1,6 +1,9 @@
 import type { Category, Product } from "$stores/products";
 import { UserRole, type User } from "$stores/user";
 
+
+
+
 function createProduct(name: string, price: number, description: string, categoriesIds: string[], id: string, imageUrl?: string): Product {
     return {
         name,

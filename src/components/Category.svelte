@@ -7,11 +7,10 @@
 
 <a class="category" href="/category/{category.id}">
 	<div class="category-icon">
-		<CategoryIcon category={category.imageUrl || ''} />
+		<CategoryIcon category={category.imageUrl ?? ''} />
 	</div>
     <div>
         {category.name}
-
     </div>
 </a>
 

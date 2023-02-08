@@ -32,8 +32,8 @@ class Api{
     getUser = async (userName: string) => {
         return this.db.getUser(userName)
     }
-    getUserCart = async (userId: string) => {
-        return this.db.getUserCart(userId)
+    getUserCart = async () => {
+        return this.db.getUserCart()
     }
     addProduct = async (product: Product) => {
         return this.db.addProduct(product)

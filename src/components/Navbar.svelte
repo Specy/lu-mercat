@@ -1,7 +1,11 @@
 <script lang="ts">
+	import { cart } from '$stores/cart';
+	import { orders } from '$stores/orders';
+	import { userStore } from '$stores/user';
 	import FaShoppingCart from 'svelte-icons/fa/FaShoppingCart.svelte';
 	import FaTimes from 'svelte-icons/fa/FaTimes.svelte';
 	import Button from './buttons/Button.svelte';
+	import ButtonLink from './buttons/ButtonLink.svelte';
 	import Cart from './Cart.svelte';
 	import Icon from './layout/Icon.svelte';
 
@@ -27,7 +31,47 @@
 	</div>
 </nav>
 <div class="floating-cart" class:cartVisible>
-    <Cart />
+	<h2>Your cart</h2>
+	<div style="background-color: var(--tertiary); padding: 0.8rem; border-radius: 0.4rem">
+		<Cart
+			on:decreseQuantity={(e) => {
+				const product = e.detail;
+				cart.reduceProductToCart({
+					...product,
+					quantity: 1
+				});
+			}}
+			on:increseQuantity={(e) => {
+				const product = e.detail;
+				cart.addProductToCart({
+					...product,
+					quantity: 1
+				});
+			}}
+		/>
+	</div>
+	<div class="row" style="justify-content: center; width: 100%;">
+		{#if $userStore && $cart.length > 0}
+			<Button
+				style="width: 100%"
+				on:click={() => {
+					orders.placeOrder($userStore.id, $cart);
+				}}
+			>
+				Checkout
+			</Button>
+		{:else if $cart.length > 0}
+			<ButtonLink
+				href="/login"
+				style="width: 100%"
+				on:click={() => {
+					cartVisible = false;
+				}}
+			>
+				Login to checkout
+			</ButtonLink>
+		{/if}
+	</div>
 </div>
 
 <style lang="scss">
@@ -35,7 +79,7 @@
 		position: fixed;
 		width: 100vw;
 		top: 0;
-        height: 3rem;
+		height: 3rem;
 		left: 0;
 		justify-content: space-between;
 		display: flex;
@@ -51,32 +95,35 @@
 	.floating-cart {
 		position: absolute;
 		top: 3rem;
-        height: calc(100% - 3rem);
-        border-top: solid 0.1rem var(--tertiary);
-        background-color: rgba(var(--RGB-secondary), 0.8);
+		height: calc(100% - 3rem);
+		border-top: solid 0.1rem var(--tertiary);
+		background-color: rgba(var(--RGB-secondary), 0.8);
 		width: 80%;
-        max-width: 30rem;
+		max-width: 30rem;
 		right: 0;
 		display: flex;
 		transform: translateX(100%);
-        transition: all 0.2s;
-		align-items: center;
+		transition: all 0.2s;
+		gap: 1rem;
+		z-index: 1000;
+		padding: 1rem;
+		flex-direction: column;
 		gap: 1rem;
 	}
 	.cartVisible {
 		transform: translateX(0);
-        animation: forwards delayBlur 0.2s;
+		animation: forwards delayBlur 0.2s;
 	}
 
-    @keyframes delayBlur {
-        0% {
-            backdrop-filter: unset;
-        }
-        99% {   
-            backdrop-filter: unset;
-        }
-        100% {
-            backdrop-filter: blur(0.5rem);
-        }
-    }
+	@keyframes delayBlur {
+		0% {
+			backdrop-filter: unset;
+		}
+		99% {
+			backdrop-filter: unset;
+		}
+		100% {
+			backdrop-filter: blur(0.5rem);
+		}
+	}
 </style>

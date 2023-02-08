@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { toast, ToastType } from '$stores/toastStore'
-	import { fly } from 'svelte/transition'
-	import Icon from '$cmp/layout/Icon.svelte'
-	import FaTimes from 'svelte-icons/fa/FaTimes.svelte'
+	import { toast, ToastType } from '$stores/toastStore';
+	import { fly } from 'svelte/transition';
+	import Icon from '$cmp/layout/Icon.svelte';
+	import FaTimes from 'svelte-icons/fa/FaTimes.svelte';
 </script>
 
 <slot />
@@ -30,7 +30,7 @@
 				/>
 			</div>
 		</div>
-		{:else}
+	{:else}
 		<div class="pill" class:pillVisible={$toast.visible} in:fly={{ y: -100 }}>
 			{$toast.message}
 		</div>
@@ -45,7 +45,7 @@
 		top: 1rem;
 		max-height: 10rem;
 		width: 20rem;
-		color: #bfbfbf;
+		color: var(--RGB-secondary-text);
 		background-color: rgba(var(--RGB-secondary), 0.85);
 		backdrop-filter: blur(3px);
 		border-radius: 0.4rem;
@@ -58,20 +58,23 @@
 		padding: 0.6rem;
 		padding-top: 0.1rem;
 	}
-	.pill{
+	.pill {
 		position: absolute;
+		text-align: center;
+		max-width: 80vw;
 		left: 50vw;
 		top: 0.6rem;
-		padding: 0.6rem 2rem;  
+		padding: 0.6rem 2rem;
 		border-radius: 10rem;
 		background-color: rgba(var(--RGB-secondary), 0.85);
+		color: var(--RGB-secondary-text);
 		backdrop-filter: blur(3px);
 		box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
 		z-index: 20;
 		transition: transform 0.3s ease-out;
 		transform: translateY(calc(-100% - 1rem)) translateX(-50%);
 	}
-	.pillVisible{
+	.pillVisible {
 		transform: translateY(0) translateX(-50%);
 	}
 	.toastVisible {

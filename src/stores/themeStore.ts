@@ -18,17 +18,17 @@ const themeObject = {
         prop: 'primary'
     },
     secondary: {
-        color: '#d6c5b4',
+        color: '#a3988c',
         name: 'secondary',
         prop: 'secondary'
     },
     tertiary: {
-        color: '#1D3557',
+        color: '#b09c88',
         name: 'tertiary',
         prop: 'tertiary'
     },
     accent: {
-        color: '#E63946',
+        color: '#464646',
         name: 'accent',
         prop: 'accent'
     },

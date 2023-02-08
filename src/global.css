@@ -23,7 +23,7 @@ html {
 	width: 100%;
 	background-color: var(--background, #F7F9F6);
 	color: var(--background-text, #181818);
-    font-weight: 500;
+    font-weight: 700;
 	display: flex;
 	font-family: Nunito;
 	flex-direction: column;
