@@ -10,8 +10,8 @@
 
 <div 
     class="page"
-    out:fade={{ duration: 300 }}
-    in:fly={{ duration: 300, x: 100, delay: 300 }}
+    out:fade={{ duration: 100 }}
+    in:fly={{ duration: 150, y: -30, delay: 100 }}
 >
     <div class="content">
         <slot />
@@ -25,6 +25,7 @@
         display: flex;
         flex-direction: column;
         flex: 1;
+        margin-top: 2rem;
     }
     .page{
         align-items: center;

@@ -35,17 +35,22 @@ export function createProductsStore(){
         sync
     }
 }
-export const products = createProductsStore()
-products.setProducts(MOCK_PRODUCTS)
-if(browser) products.sync()
+export const productsStore = createProductsStore()
+productsStore.setProducts(MOCK_PRODUCTS)
+if(browser) productsStore.sync()
+
 export function createCategoriesStore(){
     const { subscribe, set, update } = writable<Category[]>([])
     function setCategories(categories: Category[]){
         set(categories)
     }
     function getproductsOfCategory(categoryId: string){
-        const _products = get(products)
+        const _products = get(productsStore)
         return _products.filter(product => product.categoriesIds.includes(categoryId))
+    }
+    function getCategoryById(categoryId: string){
+        const _categories = get(categoriesStore)
+        return _categories.find(category => category.id === categoryId)
     }
     async function sync(){
         set(await api.getCategories())
@@ -54,10 +59,11 @@ export function createCategoriesStore(){
         subscribe,
         setCategories,
         getproductsOfCategory,
+        getCategoryById,
         sync
     }
 }
 
-export const categories = createCategoriesStore()
-categories.setCategories(MOCK_CATEGORIES)
-if(browser) categories.sync()
+export const categoriesStore = createCategoriesStore()
+categoriesStore.setCategories(MOCK_CATEGORIES)
+if(browser) categoriesStore.sync()

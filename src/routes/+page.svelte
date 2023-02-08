@@ -1,13 +1,13 @@
 <script lang="ts">
 	import Category from '$cmp/Category.svelte';
 	import Page from '$cmp/layout/Page.svelte';
-	import { categories } from '$stores/products';
+	import { categoriesStore } from '$stores/products';
 </script>
 
 <Page>
-	<h1>Categories</h1>
+	<h1 style="margin-bottom: 2rem;">Categories</h1>
 	<div class="categories">
-        {#each $categories as category}
+        {#each $categoriesStore as category}
             <Category {category} />
         {/each}
     </div>
@@ -16,9 +16,8 @@
 <style lang="scss">
 
     .categories{
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
         gap: 1rem;
     }
 </style>

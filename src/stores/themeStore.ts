@@ -18,7 +18,7 @@ const themeObject = {
         prop: 'primary'
     },
     secondary: {
-        color: '#457B9D',
+        color: '#d6c5b4',
         name: 'secondary',
         prop: 'secondary'
     },
