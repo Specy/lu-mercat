@@ -36,7 +36,7 @@ export const MOCK_CATEGORIES: Category[] = [
     createCategory('Bakery', 'Bakery description', '3', 'bread'),
     createCategory('Dairy', 'Dairy description', '4', 'cheese'),
     createCategory('Drinks', 'Drinks description', '5','bottle'),
-    createCategory('Household', 'Household description', '6','flask'),
+    createCategory('Household', 'Household description', '6','home'),
 ]   
 
 export const MOCK_PRODUCTS: Product[] = [
@@ -63,6 +63,7 @@ export const MOCK_PRODUCTS: Product[] = [
     createProduct('Toilet Paper', 1.5, 'Toilet Paper description', ['6'], '21'),
     createProduct('Detergent', 1.5, 'Detergent description', ['6'], '22'),
 ]
+
 
 export const MOCK_USERS: User[] = [
     createUser('admin', 'admin', '1', UserRole.Admin),

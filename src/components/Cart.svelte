@@ -51,7 +51,6 @@
 	.product {
 		justify-content: space-between;
 		font-weight: 600;
-		border-bottom: solid 0.1rem var(--primary);
 		padding: 0.2rem;
 	}
 	.quantity {

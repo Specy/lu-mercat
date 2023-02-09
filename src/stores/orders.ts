@@ -1,10 +1,10 @@
-import { writable } from "svelte/store"
+import { writable, get } from "svelte/store"
 import type { Product } from "./products"
 import { api } from "./api/api"
 import type { User } from "./user"
-
-
-enum OrderStatus {
+import { userStore } from "./user"
+import { Db } from "./api/db"
+export enum OrderStatus {
     Pending = "pending",
     Accepted = "accepted",
     Delivered = "delivered",
@@ -18,56 +18,82 @@ export type ProductToOrder = {
 export type Order = {
     id: string
     userId: string
+    ordererId: string
     products: ProductToOrder[]
 } & (
-    {
-        status: OrderStatus.Pending
-    } | {
-        status: OrderStatus.Accepted | OrderStatus.Delivered
-        deliveratorId: string
-    }
-)
+        {
+            status: OrderStatus.Pending
+            deliveratorId: "self"
+        } | {
+            status: OrderStatus.Accepted | OrderStatus.Delivered
+            deliveratorId: string
+        }
+    )
 
-export function createOrdersStore(){
+export function createOrdersStore() {
     const { subscribe, set, update } = writable<Order[]>([])
 
-    function placeOrder(userId: string, products: ProductToOrder[]){
+    userStore.subscribe(user => {
+        if (user) fetchData(user)
+    })
+    function placeOrder(userId: string, ordererId: string, products: ProductToOrder[]) {
         update(orders => {
             const newOrder: Order = {
-                id: Math.random().toString(),
+                id: Db.generateId(),
                 userId,
+                ordererId,
                 products,
+                deliveratorId: null,
                 status: OrderStatus.Pending
             }
-            
+            api.addOrder(newOrder)
             return [...orders, newOrder]
         })
     }
 
-    function setOrderStatus(orderId: string, status: OrderStatus){
+    function findByOrderId(orderId: string) {
+        const orders = get({ subscribe })
+        return orders.find(order => order.id === orderId)
+    }
+
+
+    function setOrderStatus(orderId: string, status: OrderStatus) {
         update(orders => {
             const orderIndex = orders.findIndex(order => order.id === orderId)
-            if(orderIndex === -1) return orders
+            if (orderIndex === -1) return orders
             orders[orderIndex].status = status
+            api.updateOrder(orders[orderIndex])
             return orders
         })
     }
 
-    function deleteOrder(orderId: string){
+    async function acceptOrderByDeliverator(order: Order, deliverator: User) {
+        order.deliveratorId = deliverator.id
+        order.status = OrderStatus.Accepted
+        await api.updateOrder(order)
         update(orders => {
             const orderIndex = orders.findIndex(order => order.id === orderId)
-            if(orderIndex === -1) return orders
+            if (orderIndex === -1) return orders
+            orders[orderIndex] = order
+            return orders
+        })
+    }
+    function deleteOrder(orderId: string) {
+        update(orders => {
+            const orderIndex = orders.findIndex(order => order.id === orderId)
+            if (orderIndex === -1) return orders
             orders.splice(orderIndex, 1)
+            api.removeOrder(orderId)
             return orders
         })
     }
 
-    function setOrders(orders: Order[]){
+    function setOrders(orders: Order[]) {
         set(orders)
     }
 
-    
-    async function fetch(user: User){
+
+    async function fetchData(user: User) {
         setOrders(await api.getOrders(user))
     }
     return {
@@ -76,12 +102,13 @@ export function createOrdersStore(){
         setOrderStatus,
         deleteOrder,
         setOrders,
-        fetch
+        findByOrderId,
+        fetchData,
+        acceptOrderByDeliverator
     }
 }
 
 
-export const orders = createOrdersStore()
-
+export const ordersStore = createOrdersStore()
 
 

@@ -48,6 +48,12 @@ export function createCartStore(){
             return cart
         })
     }
+    function resetCart(){
+        update(cart => {
+            cart.map(api.removeProductFromCart)
+            return []
+        })
+    }
     function updateProductQuantity(productId: string, quantity: number){
         update(cart => {
             const productIndex = cart.findIndex(p => p.product.id === productId)
@@ -71,6 +77,7 @@ export function createCartStore(){
         reduceProductToCart,
         removeProductFromCart,
         setCart,
+        resetCart,
         updateProductQuantity, 
         sync
     }

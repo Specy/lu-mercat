@@ -27,10 +27,16 @@ class Api{
         return this.db.getCategories()
     }
     getOrders = async (user: User) => {
-        return this.db.getOrdersOfUser(user.id)
+        return this.db.getOrdersOfUser(user)
     }
-    getUser = async (userName: string) => {
-        return this.db.getUser(userName)
+    getAllConsumers = async () => {
+        return this.db.getAllConsumers()
+    }
+    getFreeOrders = async () => {
+        return this.db.getFreeOrders()
+    }
+    getUser = async (id: string) => {
+        return this.db.getUser(id)
     }
     getUserCart = async () => {
         return this.db.getUserCart()

@@ -66,9 +66,8 @@
 		top: 0.6rem;
 		padding: 0.6rem 2rem;
 		border-radius: 10rem;
-		background-color: rgba(var(--RGB-secondary), 0.85);
-		color: var(--RGB-secondary-text);
-		
+		background-color: rgba(var(--RGB-primary), 0.85);
+		color: var(--primary-text);
 		backdrop-filter: blur(3px);
 		box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
 		z-index: 20;

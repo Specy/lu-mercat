@@ -48,9 +48,12 @@
 	}
 	.form {
 		background-color: var(--primary);
+		color: var(--primary-text);
 		border-radius: 1rem;
 		padding: 1rem;
 		display: flex;
+		width: 100%;
+		max-width: 30rem;
 		flex-direction: column;
 		gap: 0.6rem;
 	}

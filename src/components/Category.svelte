@@ -9,9 +9,9 @@
 	<div class="category-icon">
 		<CategoryIcon category={category.imageUrl ?? ''} />
 	</div>
-    <div>
-        {category.name}
-    </div>
+	<div>
+		{category.name}
+	</div>
 </a>
 
 <style lang="scss">
@@ -20,6 +20,7 @@
 		align-items: center;
 		justify-content: center;
 		flex-direction: column;
+		box-shadow: 6px 8px 0px 0px rgb(0 0 0 / 0.28), 0 4px 6px -4px rgb(0 0 0 / 10%);
 		padding: 1rem;
 		flex: 1;
 		font-size: 1.2rem;

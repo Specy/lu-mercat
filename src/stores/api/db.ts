@@ -1,13 +1,13 @@
 import type { Order, ProductToOrder } from "$stores/orders";
 import type { Category, Product } from "$stores/products";
-import type { User } from "$stores/user";
+import { UserRole, type User } from "$stores/user";
 import Dexie from "dexie"
 import type { Table } from 'dexie'
 import { MOCK_CATEGORIES, MOCK_PRODUCTS, MOCK_USERS } from "./mock";
 
 function id(length = 7) {
     let result = '';
-    for(let i = 0; i < length; i++) {
+    for (let i = 0; i < length; i++) {
         const random = Math.random();
         result += String.fromCharCode(Math.floor(random * 26) + (random < .5 ? 65 : 97));
     }
@@ -20,46 +20,46 @@ type SerializedProductToOrder = {
     productId: string
 }
 
-export class Db extends Dexie{
+export class Db extends Dexie {
     products!: Table<Product, string>
     categories!: Table<Category, string>
     orders!: Table<Order, string>
     users!: Table<User, string>
     userCart!: Table<SerializedProductToOrder, string>
-    constructor(){
+    constructor() {
         super('lu-mercat-db')
-        this.version(1).stores({
+        this.version(4).stores({
             products: 'id, categoriesIds',
             categories: 'id',
-            orders: 'id, deliveratorId',
-            users: 'id, username',
+            orders: 'id, deliveratorId, userId, ordererId',
+            users: 'id, username, role',
             userCart: 'id, productId'
         })
         this.on('populate', async () => {
-            const c = MOCK_CATEGORIES.map (category => this.categories.add(category))
-            const p = MOCK_PRODUCTS.map (product => this.products.add(product))
-            const u = MOCK_USERS.map (user => this.users.add(user))
+            const c = MOCK_CATEGORIES.map(category => this.categories.add(category))
+            const p = MOCK_PRODUCTS.map(product => this.products.add(product))
+            const u = MOCK_USERS.map(user => this.users.add(user))
             await Promise.all([...c, ...p, ...u])
         })
     }
-    static generateId(){
+    static generateId() {
         return id()
     }
-    async addProduct(product: Product){
+    async addProduct(product: Product) {
         await this.products.add(product)
     }
-    async addCategory(category: Category){
+    async addCategory(category: Category) {
         await this.categories.add(category)
     }
-    async addOrder(order: Order){
+    async addOrder(order: Order) {
         await this.orders.add(order)
     }
-    async addUser(user: User){
+    async addUser(user: User) {
         await this.users.add(user)
     }
-    async registerUser(username: string, password: string, role: User['role']){
-        const user = await this.users.get({username})
-        if(user) throw new Error('User already exists')
+    async registerUser(username: string, password: string, role: User['role']) {
+        const user = await this.users.get({ username })
+        if (user) throw new Error('User already exists')
         const newUser = {
             username,
             password,
@@ -69,31 +69,50 @@ export class Db extends Dexie{
         await this.users.add(newUser)
         return newUser
     }
-    async addProductToCart(product: ProductToOrder){
+    async addProductToCart(product: ProductToOrder) {
         await this.userCart.add({
             id: Db.generateId(),
             productId: product.product.id,
             quantity: product.quantity
         })
-    }    
-    async getProducts(){
+    }
+    async getProducts() {
         return await this.products.toArray()
     }
-    async getCategories(){
+    async getCategories() {
         return await this.categories.toArray()
     }
-    async getOrders(){
+    async getOrders() {
         return await this.orders.toArray()
     }
-    async getOrdersOfUser(userId: string){
-        const ownOrders = await this.orders.where({userId}).toArray()
-        const ordersOfDeliverator = await this.orders.where({deliveratorId: userId}).toArray()
-        return [...ownOrders, ...ordersOfDeliverator]
+    async getOrdersOfUser(user: User) {
+        const ownOrders = await this.orders.where({ userId: user.id }).toArray()
+        const ordersOfDeliverator = await this.orders.where({ deliveratorId: user.id }).toArray()
+        const result = [...ownOrders, ...ordersOfDeliverator]
+        if (user.role === UserRole.Appointee) {
+            const accessibleOrders = await this.getFreeOrders()
+            result.push(...accessibleOrders)
+        }
+        if (user.role === UserRole.Delegate){
+            const delegatedOrders = await this.orders.where({ ordererId: user.id }).toArray()
+            for(const order of delegatedOrders){
+                if(!result.find(o => o.id === order.id)){
+                    result.push(order)
+                }
+            }
+        }
+        return result
     }
-    async getUser(userName: string){
-        return await this.users.get({username: userName})
+    async getAllConsumers() {
+        return await this.users.where({ role: UserRole.Customer }).toArray()
     }
-    async getUserCart(){
+    async getFreeOrders() {
+        return await this.orders.where({ deliveratorId: "self" }).toArray()
+    }
+    async getUser(username: string) {
+        return await this.users.get({ username })
+    }
+    async getUserCart() {
         const products = await this.userCart.toArray()
         const parsed = await Promise.all(products.map(async product => {
             return {
@@ -103,34 +122,34 @@ export class Db extends Dexie{
         }))
         return parsed
     }
-    async removeProduct(productId: string){
+    async removeProduct(productId: string) {
         await this.products.delete(productId)
     }
-    async removeCategory(categoryId: string){
+    async removeCategory(categoryId: string) {
         await this.categories.delete(categoryId)
     }
-    async removeOrder(orderId: string){
+    async removeOrder(orderId: string) {
         await this.orders.delete(orderId)
     }
-    async removeUser(userId: string){
+    async removeUser(userId: string) {
         await this.users.delete(userId)
     }
-    async removeProductFromCart(productId: string){
-        await this.userCart.where({productId}).delete()
+    async removeProductFromCart(productId: string) {
+        await this.userCart.where({ productId }).delete()
     }
-    async updateProduct(product: Product){
+    async updateProduct(product: Product) {
         await this.products.update(product.id, product)
     }
-    async updateCategory(category: Category){
+    async updateCategory(category: Category) {
         await this.categories.update(category.id, category)
     }
-    async updateOrder(order: Order){
+    async updateOrder(order: Order) {
         await this.orders.update(order.id, order)
     }
-    async updateUser(user: User){
+    async updateUser(user: User) {
         await this.users.update(user.id, user)
     }
-    async updateProductInCart(product: ProductToOrder){
-        await this.userCart.where({ productId: product.product.id}).modify(product)
+    async updateProductInCart(product: ProductToOrder) {
+        await this.userCart.where({ productId: product.product.id }).modify(product)
     }
 }

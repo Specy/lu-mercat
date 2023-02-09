@@ -26,13 +26,19 @@ export function createProductsStore(){
     function setProducts(products: Product[]){
         set(products)
     }
+
+    function getById(productId: string){
+        const _products = get(productsStore)
+        return _products.find(product => product.id === productId)
+    }
     async function sync(){
         set(await api.getProducts())
     }
     return {
         subscribe,
         setProducts,
-        sync
+        sync,
+        getById
     }
 }
 export const productsStore = createProductsStore()
@@ -48,6 +54,8 @@ export function createCategoriesStore(){
         const _products = get(productsStore)
         return _products.filter(product => product.categoriesIds.includes(categoryId))
     }
+
+
     function getCategoryById(categoryId: string){
         const _categories = get(categoriesStore)
         return _categories.find(category => category.id === categoryId)

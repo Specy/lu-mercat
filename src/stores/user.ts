@@ -1,5 +1,6 @@
 import { writable } from "svelte/store";
 import { api } from "./api/api";
+import { browser } from "$app/environment";
 
 
 export enum UserRole {
@@ -7,7 +8,9 @@ export enum UserRole {
     Delegate = "Delegate",
     Appointee = "Appointee",
     Customer = "Customer",
-} 
+}
+
+
 
 export type User = {
     username: string
@@ -16,25 +19,41 @@ export type User = {
     role: UserRole
 }
 
-function createUser(){
+function createUser() {
     const { subscribe, set, update } = writable<User | null>(null)
 
+
     async function login(username: string, password: string) {
-        set(await api.login(username, password))
+        const user = await api.login(username, password)
+        set(user)
+        localStorage.setItem("lu_mercat_user", JSON.stringify(user))
     }
 
     async function register(username: string, password: string, role: UserRole) {
         set(await api.registerUser(username, password, role))
     }
-    function logout(){
+    async function getAllConsumers(){
+        return api.getAllConsumers()
+    }
+    async function findById(id: string) {
+        return api.getUser(id)
+    }
+    function logout() {
         set(null)
+        localStorage.removeItem("lu_mercat_user")
     }
 
+    if (browser) {
+        const user = localStorage.getItem("lu_mercat_user")
+        set(JSON.parse(user ?? "null"))
+    }
     return {
         subscribe,
         login,
         register,
-        logout
+        logout,
+        findById,
+        getAllConsumers
     }
 }
 

@@ -18,13 +18,14 @@
 			<Input bind:value={username} placeholder="Username" />
 			<Input bind:value={password} placeholder="Password" type="password" />
 
-			<div class="column" style="align-items: center;">
+			<div class="column" style="align-items: center; gap: 0.4rem">
 				<Button
 					style="width: 100%; margin-top: 1rem"
-					on:click={() => {
+					on:click={async () => {
 						try {
-							userStore.login(username, password);
+							await userStore.login(username, password);
 						} catch (e) {
+							console.error(e);
 							return toast.error('Invalid username or password');
 						}
 						toast.success('Logged in successfully');
@@ -51,8 +52,11 @@
 	}
 	.form {
 		background-color: var(--primary);
+		color: var(--primary-text);
 		border-radius: 1rem;
 		padding: 1rem;
+		width: 100%;
+		max-width: 30rem;
 		display: flex;
 		flex-direction: column;
 		gap: 0.6rem;

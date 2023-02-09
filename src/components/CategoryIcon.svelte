@@ -4,9 +4,8 @@
     import FaBreadSlice from 'svelte-icons/fa/FaBreadSlice.svelte'
     import FaCheese from 'svelte-icons/fa/FaCheese.svelte'
     import FaWineBottle from 'svelte-icons/fa/FaWineBottle.svelte'
-    import FaFlask from 'svelte-icons/fa/FaFlask.svelte'
-
-    export let category: string
+    import FaHome from 'svelte-icons/fa/FaHome.svelte'
+    export let category: string 
 </script>
 
 {#if category === 'apple'}
@@ -19,6 +18,6 @@
     <FaCheese />
 {:else if category === 'bottle'}
     <FaWineBottle />
-{:else if category === 'flask'}
-    <FaFlask />
+{:else if category === 'home'}
+    <FaHome />
 {/if}

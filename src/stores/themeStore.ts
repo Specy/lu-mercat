@@ -8,27 +8,27 @@ import type { Writable } from "svelte/store"
 
 const themeObject = {
     background: {
-        color: "#EDEDE9",
+        color: "#f7f7f7",
         name: 'background',
         prop: 'background'
     },
     primary: {
-        color: '#D6CCC2',
+        color: '#353a44',
         name: 'primary',
         prop: 'primary'
     },
     secondary: {
-        color: '#a3988c',
+        color: '#b7c2c2',
         name: 'secondary',
         prop: 'secondary'
     },
     tertiary: {
-        color: '#b09c88',
+        color: '#97a4b1',
         name: 'tertiary',
         prop: 'tertiary'
     },
     accent: {
-        color: '#464646',
+        color: '#52686c',
         name: 'accent',
         prop: 'accent'
     },

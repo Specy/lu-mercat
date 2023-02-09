@@ -1,10 +1,9 @@
 <script lang="ts">
-	import { fade, fly, scale } from 'svelte/transition';
+	import { fly } from 'svelte/transition';
 
-	export let animate = true;
 </script>
 
-<div class="page" in:scale={{ duration: 200, start: 0.9, opacity: 0.4}}>
+<div class="page" in:fly={{ duration: 200, y: -30, opacity: 0.8}}>
 	<div class="content">
 		<slot />
 	</div>
@@ -16,7 +15,6 @@
 		display: flex;
 		flex-direction: column;
 		flex: 1;
-		margin-top: 2rem;
 	}
 	.page {
 		align-items: center;

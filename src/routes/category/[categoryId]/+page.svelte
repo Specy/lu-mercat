@@ -37,6 +37,7 @@
 				{#each products as product}
 					<ProductRow
 						{product}
+						{categoryId}
 						on:addToCart={() => {
 							cart.addProductToCart({
 								product: product,
