@@ -1,9 +1,13 @@
 <script lang="ts">
 	import { ordersStore, OrderStatus, type Order } from '$stores/orders';
-	import { UserRole, userStore, type User } from '$stores/user';
+	import { Prompt } from '$stores/promptStore';
+	import { toast } from '$stores/toastStore';
+	import { UserRole, userStore, type User } from '$stores/userStore';
 	import { onMount } from 'svelte';
 	import FaChevronDown from 'svelte-icons/fa/FaChevronDown.svelte';
+	import FaTrash from 'svelte-icons/fa/FaTrash.svelte';
 	import Button from './buttons/Button.svelte';
+	import ButtonLink from './buttons/ButtonLink.svelte';
 	import Icon from './layout/Icon.svelte';
 	export let user: User;
 	export let order: Order;
@@ -18,19 +22,22 @@
 
 <div class="column order">
 	<div class="row" style="justify-content: space-between; align-items: center">
-		<h3 style="height: min-content">
-			{#if order.userId !== user.id}
-				{#if orderer && receiver}
-					{#if orderer !== receiver}
-						{orderer.id === user.id ? 'You' : orderer.username} ordered for {receiver.username}
-					{:else}
-						{orderer.username}
+		<a href="/user/{order.userId}" style="text-decoration: underline;">
+			<h3 style="height: min-content">
+				{#if order.userId !== user.id}
+					{#if orderer && receiver}
+						{#if orderer?.id !== receiver?.id}
+							{orderer.id === user.id ? 'You' : orderer.username} ordered for {receiver.username}
+						{:else}
+							{orderer.username}
+						{/if}
 					{/if}
+				{:else}
+					Your order
 				{/if}
-			{:else}
-				Your order
-			{/if}
-		</h3>
+			</h3>
+		</a>
+
 		<div class="status">
 			{order.status}
 		</div>
@@ -38,7 +45,7 @@
 	<div
 		on:click={() => (productsVisible = !productsVisible)}
 		class="row"
-		style="align-items: center; justify-content: space-between; border-top: 0.1rem solid var(--primary-text); margin-top: 0.6rem; padding-top: 0.6rem"
+		style="align-items: center; justify-content: space-between; margin-top: 0.6rem; padding-top: 0.6rem"
 	>
 		<h2>
 			{order.products.length} products
@@ -63,35 +70,58 @@
 		{/if}
 	</div>
 	<div class="row" style="justify-content: space-between; margin-top: 1rem">
-		<div>Total</div>
-		<div>
-			{order.products.reduce((acc, product) => {
-				return acc + product.product.price * product.quantity;
-			}, 0)}€
-		</div>
-	</div>
-	{#if user.role === UserRole.Appointee}
-        <div style="margin-top: 1rem;">
-            {#if order.status === OrderStatus.Pending}
-			<Button
-				on:click={() => {
-					ordersStore.acceptOrderByDeliverator(order, user);
-				}}
-			>
-				Accept
-			</Button>
-		{:else if order.status === OrderStatus.Accepted}
-			<Button
-				on:click={() => {
-					ordersStore.setOrderStatus(order.id, OrderStatus.Delivered);
-				}}
-			>
-				Set as delivered
-			</Button>
-		{:else if order.status === OrderStatus.Delivered}
-			Delivered
+		{#if order.finalPrice}
+			<div>
+				Total: {order.finalPrice}€
+			</div>
+		{:else}
+			<div>Estimated Total</div>
+			<div>
+				{order.products.reduce((acc, product) => {
+					return acc + product.product.price * product.quantity;
+				}, 0)}€
+			</div>
 		{/if}
-        </div>
+	</div>
+
+	{#if user.role === UserRole.Appointee}
+		<div style="margin-top: 1rem; justify-content: space-between" class="row">
+			{#if order.status === OrderStatus.Pending}
+				<Button
+					on:click={() => {
+						ordersStore.acceptOrderByDeliverator(order, user);
+					}}
+				>
+					Accept
+				</Button>
+			{:else if order.status === OrderStatus.Bought}
+				<Button
+					on:click={() => {
+						ordersStore.setOrderStatus(order.id, OrderStatus.Delivered);
+					}}
+				>
+					Set as delivered
+				</Button>
+			{:else if order.status === OrderStatus.Delivered}
+				<Button
+					cssVar="red"
+					on:click={async () => {
+						const confirmed = await Prompt.confirm('Are you sure you want to delete this order?');
+						if (!confirmed) return;
+						ordersStore.deleteOrder(order.id);
+					}}
+				>
+					<Icon>
+						<FaTrash />
+					</Icon>
+				</Button>
+			{/if}
+			{#if order.status !== OrderStatus.Pending}
+				<ButtonLink href="/orders/{order.id}" cssVar="accent2">
+					View order
+				</ButtonLink>
+			{/if}
+		</div>
 	{/if}
 </div>
 
@@ -100,6 +130,7 @@
 		width: 100%;
 		max-width: 40rem;
 		border-radius: 1rem;
+		position: relative;
 		box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 		background-color: var(--primary);
 		color: var(--primary-text);
@@ -107,8 +138,12 @@
 	}
 	.status {
 		padding: 0.5rem;
-		border-radius: 0.5rem;
-		background-color: var(--accent);
-		color: var(--accent-text);
+		position: absolute;
+		top: 0;
+		right: 0;
+		border-bottom: solid 0.2rem var(--accent2);
+		border-bottom-left-radius: 0.6rem;
+		border-left: solid 0.2rem var(--accent2);
+		color: var(--primary-text);
 	}
 </style>

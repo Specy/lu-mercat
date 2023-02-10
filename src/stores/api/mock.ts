@@ -1,7 +1,5 @@
 import type { Category, Product } from "$stores/products";
-import { UserRole, type User } from "$stores/user";
-
-
+import { UserRole, type User } from "$stores/userStore";
 
 
 function createProduct(name: string, price: number, description: string, categoriesIds: string[], id: string, imageUrl?: string): Product {
@@ -22,12 +20,13 @@ function createCategory(name: string, description: string, id: string, imageUrl?
         description
     }
 }
-function createUser(username: string, password: string, id: string, role: UserRole): User {
+function createUser(username: string, password: string, id: string, role: UserRole, address: string): User {
     return {
         username,
         password,
         id,
-        role
+        role,
+        address
     }
 }
 export const MOCK_CATEGORIES: Category[] = [
@@ -35,9 +34,9 @@ export const MOCK_CATEGORIES: Category[] = [
     createCategory('Meat & Fish', 'Meat description', '2', 'bacon'),
     createCategory('Bakery', 'Bakery description', '3', 'bread'),
     createCategory('Dairy', 'Dairy description', '4', 'cheese'),
-    createCategory('Drinks', 'Drinks description', '5','bottle'),
-    createCategory('Household', 'Household description', '6','home'),
-]   
+    createCategory('Drinks', 'Drinks description', '5', 'bottle'),
+    createCategory('Household', 'Household description', '6', 'home'),
+]
 
 export const MOCK_PRODUCTS: Product[] = [
     createProduct('Apple', 1.5, 'Apple description', ['1'], '1'),
@@ -66,8 +65,8 @@ export const MOCK_PRODUCTS: Product[] = [
 
 
 export const MOCK_USERS: User[] = [
-    createUser('admin', 'admin', '1', UserRole.Admin),
-    createUser('customer', 'customer', '2', UserRole.Customer),
-    createUser('appointee', 'appointee', '3', UserRole.Appointee),
-    createUser('delegate', 'delegate', '4', UserRole.Delegate),
+    createUser('admin', 'admin', '1', UserRole.Admin, "admin address"),
+    createUser('customer', 'customer', '2', UserRole.Customer, "customer address"),
+    createUser('appointee', 'appointee', '3', UserRole.Appointee, "appointee address"),
+    createUser('delegate', 'delegate', '4', UserRole.Delegate, "delegate address"),
 ]

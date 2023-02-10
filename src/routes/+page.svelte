@@ -3,7 +3,7 @@
 	import Category from '$cmp/Category.svelte';
 	import Page from '$cmp/layout/Page.svelte';
 	import { categoriesStore } from '$stores/products';
-	import { userStore } from '$stores/user';
+	import { userStore } from '$stores/userStore';
 </script>
 
 <Page>

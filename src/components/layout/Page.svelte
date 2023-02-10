@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { fly } from 'svelte/transition';
-
+	export let style: string = ""
 </script>
 
 <div class="page" in:fly={{ duration: 200, y: -30, opacity: 0.8}}>
-	<div class="content">
+	<div class="content" {style}>
 		<slot />
 	</div>
 </div>
@@ -18,10 +18,10 @@
 	}
 	.page {
 		align-items: center;
-		padding: 1rem;
 	}
 	.content {
 		width: 100%;
-		max-width: 60rem;
+		padding: 1rem;
+		max-width: 50rem;
 	}
 </style>

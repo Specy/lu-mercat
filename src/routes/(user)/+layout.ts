@@ -1,5 +1,5 @@
 
-import { userStore } from "$stores/user";
+import { userStore } from "$stores/userStore";
 import { redirect } from "@sveltejs/kit";
 import { get } from "svelte/store";
 

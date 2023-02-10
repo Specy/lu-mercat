@@ -2,7 +2,7 @@
 	import { cart } from '$stores/cart';
 	import { ordersStore } from '$stores/orders';
 	import { toast } from '$stores/toastStore';
-	import { UserRole, userStore, type User } from '$stores/user';
+	import { UserRole, userStore, type User } from '$stores/userStore';
 	import { onMount } from 'svelte';
 	import FaShoppingCart from 'svelte-icons/fa/FaShoppingCart.svelte';
 	import FaTimes from 'svelte-icons/fa/FaTimes.svelte';
@@ -39,6 +39,11 @@
 		</Icon>
 	</div>
 </nav>
+<div
+	class="cart-overlay"
+	class:cart-overlay-visible={cartVisible}
+	on:click={() => (cartVisible = false)}
+/>
 <div class="floating-cart" class:cartVisible>
 	<h2>Your cart</h2>
 	<div
@@ -142,6 +147,24 @@
 		background-color: rgba(var(--RGB-secondary), 0.8);
 		padding: 0.5rem 1rem;
 	}
+	.cart-overlay {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+		background-color: rgba(0, 0, 0, 0.3);
+		backdrop-filter: blur(0.2rem);
+		opacity: 0;
+		visibility: hidden;
+		transition: all 0.2s;
+		pointer-events: none;
+	}
+	.cart-overlay-visible {
+		opacity: 1;
+		visibility: visible;
+		pointer-events: all;
+	}
 	.user-select {
 		width: 100%;
 		height: 2.5rem;
@@ -174,18 +197,5 @@
 	}
 	.cartVisible {
 		transform: translateX(0);
-		animation: forwards delayBlur 0.2s;
-	}
-
-	@keyframes delayBlur {
-		0% {
-			backdrop-filter: unset;
-		}
-		99% {
-			backdrop-filter: unset;
-		}
-		100% {
-			backdrop-filter: blur(0.5rem);
-		}
 	}
 </style>

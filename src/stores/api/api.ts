@@ -1,25 +1,20 @@
 
 import type { Order, ProductToOrder } from "$stores/orders";
 import type { Category, Product } from "$stores/products";
-import type { User, UserRole } from "$stores/user";
+import type { User, UserRole } from "$stores/userStore";
 import { Db } from "./db";
 
 class Api{
     db = new Db()
-
-
     login = async (username: string, password: string) => {
-        const user = await this.db.getUser(username)
+        const user = await this.db.getUserByUsername(username)
         if(!user) throw new Error('User not found')
         if(user.password !== password) throw new Error('Wrong password')
         return user
     }
-
-    registerUser = async (username: string, password: string, role: UserRole) => {
-        return await this.db.registerUser(username, password, role)
+    registerUser = async (username: string, password: string, role: UserRole, address: string) => {
+        return await this.db.registerUser(username, password, role, address)
     }
-
-
     getProducts = async () => {
         return this.db.getProducts()
     }
@@ -37,6 +32,9 @@ class Api{
     }
     getUser = async (id: string) => {
         return this.db.getUser(id)
+    }
+    getUserByUsername = async (username: string) => {
+        return this.db.getUserByUsername(username)
     }
     getUserCart = async () => {
         return this.db.getUserCart()

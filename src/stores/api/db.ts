@@ -1,6 +1,6 @@
 import type { Order, ProductToOrder } from "$stores/orders";
 import type { Category, Product } from "$stores/products";
-import { UserRole, type User } from "$stores/user";
+import { UserRole, type User } from "$stores/userStore";
 import Dexie from "dexie"
 import type { Table } from 'dexie'
 import { MOCK_CATEGORIES, MOCK_PRODUCTS, MOCK_USERS } from "./mock";
@@ -28,7 +28,7 @@ export class Db extends Dexie {
     userCart!: Table<SerializedProductToOrder, string>
     constructor() {
         super('lu-mercat-db')
-        this.version(4).stores({
+        this.version(6).stores({
             products: 'id, categoriesIds',
             categories: 'id',
             orders: 'id, deliveratorId, userId, ordererId',
@@ -57,13 +57,14 @@ export class Db extends Dexie {
     async addUser(user: User) {
         await this.users.add(user)
     }
-    async registerUser(username: string, password: string, role: User['role']) {
+    async registerUser(username: string, password: string, role: User['role'], address: string) {
         const user = await this.users.get({ username })
         if (user) throw new Error('User already exists')
         const newUser = {
             username,
             password,
             role,
+            address,
             id: Db.generateId()
         }
         await this.users.add(newUser)
@@ -109,7 +110,10 @@ export class Db extends Dexie {
     async getFreeOrders() {
         return await this.orders.where({ deliveratorId: "self" }).toArray()
     }
-    async getUser(username: string) {
+    async getUser(id: string) {
+        return await this.users.get({ id })
+    }
+    async getUserByUsername(username: string) {
         return await this.users.get({ username })
     }
     async getUserCart() {
@@ -117,7 +121,8 @@ export class Db extends Dexie {
         const parsed = await Promise.all(products.map(async product => {
             return {
                 quantity: product.quantity,
-                product: await this.products.get(product.productId) as Product
+                product: await this.products.get(product.productId) as Product,
+                finalPrice: 0,
             }
         }))
         return parsed

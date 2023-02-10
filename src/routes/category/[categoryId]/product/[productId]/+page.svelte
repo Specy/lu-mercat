@@ -22,7 +22,8 @@
 				on:click={() => {
 					cart.addProductToCart({
 						product,
-						quantity: 1
+						quantity: 1,
+						finalPrice: 0,
 					});
 					toast.logPill(`Added ${product?.name} to cart`);
 				}}

@@ -45,8 +45,8 @@
 		top: 1rem;
 		max-height: 10rem;
 		width: 20rem;
-		color: var(--RGB-secondary-text);
-		background-color: rgba(var(--RGB-secondary), 0.85);
+		color: var(--primary-text);
+		background-color: rgba(var(--RGB-primary), 0.85);
 		backdrop-filter: blur(3px);
 		border-radius: 0.4rem;
 		box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);

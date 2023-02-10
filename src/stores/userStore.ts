@@ -17,6 +17,7 @@ export type User = {
     password: string
     id: string
     role: UserRole
+    address: string
 }
 
 function createUser() {
@@ -29,9 +30,10 @@ function createUser() {
         localStorage.setItem("lu_mercat_user", JSON.stringify(user))
     }
 
-    async function register(username: string, password: string, role: UserRole) {
-        set(await api.registerUser(username, password, role))
+    async function register(username: string, password: string, role: UserRole, address: string) {
+        set(await api.registerUser(username, password, role, address))
     }
+    
     async function getAllConsumers(){
         return api.getAllConsumers()
     }

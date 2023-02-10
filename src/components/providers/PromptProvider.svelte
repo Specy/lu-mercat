@@ -1,14 +1,14 @@
 <script lang="ts">
 	import Button from '$cmp/buttons/Button.svelte';
 	import Input from '$cmp/inputs/Input.svelte';
-import { Prompt, PromptType } from '$stores/promptStore'
-	import { fade } from 'svelte/transition'
+	import { Prompt, PromptType } from '$stores/promptStore';
+	import { fade } from 'svelte/transition';
 
-	let input: HTMLInputElement
-	let value = ''
+	let input: HTMLInputElement;
+	let value = '';
 	$: if (!$Prompt.promise) {
-		value = ''
-		if (input) input.value = ''
+		value = '';
+		if (input) input.value = '';
 	}
 </script>
 
@@ -18,8 +18,8 @@ import { Prompt, PromptType } from '$stores/promptStore'
 		class="prompt-wrapper"
 		out:fade={{ duration: 150 }}
 		on:submit={(e) => {
-			e.preventDefault()
-			Prompt.answer(value)
+			e.preventDefault();
+			Prompt.answer(value);
 		}}
 	>
 		<div class="prompt-text">
@@ -31,7 +31,7 @@ import { Prompt, PromptType } from '$stores/promptStore'
 				focus
 				bind:value
 				hideStatus
-				style="color: var(--primary-text); background-color: var(--primary);"
+				style="color: var(--secondary-text); background-color: var(--secondary);"
 			/>
 		{/if}
 
@@ -40,7 +40,7 @@ import { Prompt, PromptType } from '$stores/promptStore'
 				{#if !$Prompt.cancellable}
 					<Button on:click={() => Prompt.answer(false)} cssVar="secondary">Cancel</Button>
 				{/if}
-				<Button on:click={() => Prompt.cancel()} style="margin-left: auto;">Ok</Button>
+				<Button on:click={() => Prompt.answer(value)} style="margin-left: auto;">Ok</Button>
 			{:else}
 				<Button on:click={() => Prompt.answer(false)} cssVar="secondary">No</Button>
 				<Button on:click={() => Prompt.answer(true)} cssVar="accent2">Yes</Button>
@@ -57,13 +57,13 @@ import { Prompt, PromptType } from '$stores/promptStore'
 		overflow: hidden;
 		max-height: 10rem;
 		width: 20rem;
-		color: var(--secondary-text);
+		color: var(--primary-text);
 		backdrop-filter: blur(3px);
 		border-radius: 0.5rem;
-		background-color: rgba(var(--RGB-secondary), 0.8);
+		background-color: rgba(var(--RGB-primary), 0.8);
 		box-shadow: 0 3px 10px rgb(0 0 0 / 20%);
 		z-index: 20;
-		padding: 0.5rem;
+		padding: 0.6rem;
 		transition: transform 0.3s ease-out;
 		flex-direction: column;
 		animation: slideIn 0.25s ease-out;

@@ -6,7 +6,7 @@
 	import Select from '$cmp/inputs/Select.svelte';
 	import Page from '$cmp/layout/Page.svelte';
 	import { toast } from '$stores/toastStore';
-	import { UserRole, userStore } from '$stores/user';
+	import { UserRole, userStore } from '$stores/userStore';
 	let username = '';
 	let password = '';
 	let role = UserRole.Customer;
@@ -42,7 +42,7 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		margin-top: 20vh;
+		margin-top: 10vh;
         gap: 1rem;
 		height: 100%;
 	}

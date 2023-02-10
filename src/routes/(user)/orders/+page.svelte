@@ -5,8 +5,8 @@
 	import Page from '$cmp/layout/Page.svelte';
 	import type { LayoutData } from '../$types';
 	export let data: LayoutData;
+	$: console.log($ordersStore);
 
-    $: console.log($ordersStore)
 </script>
 
 <Page>
