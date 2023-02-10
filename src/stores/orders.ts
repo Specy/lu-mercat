@@ -60,10 +60,13 @@ export function createOrdersStore() {
         return orders.find(order => order.id === orderId)
     }
 
-    function confimProdultPriceInOrder(order: Order, product: ProductToOrder, price: number) {
+    async function confimProdultPriceInOrder(order: Order, product: ProductToOrder, price: number) {
         if (!product) return
         product.finalPrice = price
-        api.updateOrder(order)
+        const index = order.products.findIndex(p => p.product.id === product.product.id)
+        if (index === -1) return
+        order.products[index] = product
+        await api.updateOrder(order)
         update(orders => {
             const orderIndex = orders.findIndex(o => o.id === order.id)
             if (orderIndex === -1) return orders

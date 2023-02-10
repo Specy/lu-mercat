@@ -10,6 +10,7 @@
 	import { toast } from '$stores/toastStore';
 
 	let order = ordersStore.findByOrderId($page.params.orderId);
+	$: console.log(order);
 </script>
 
 <Page>
