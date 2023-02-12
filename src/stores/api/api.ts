@@ -24,6 +24,9 @@ class Api{
     getOrders = async (user: User) => {
         return this.db.getOrdersOfUser(user)
     }
+    getOrder = async (id: string) => {
+        return this.db.getOrder(id)
+    }
     getAllConsumers = async () => {
         return this.db.getAllConsumers()
     }

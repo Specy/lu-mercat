@@ -35,7 +35,6 @@ export type Order = {
 
 export function createOrdersStore() {
     const { subscribe, set, update } = writable<Order[]>([])
-
     userStore.subscribe(user => {
         if (user) fetchData(user)
     })
@@ -60,19 +59,14 @@ export function createOrdersStore() {
         return orders.find(order => order.id === orderId)
     }
 
-    async function confimProdultPriceInOrder(order: Order, product: ProductToOrder, price: number) {
-        if (!product) return
+    async function confimProdultPriceInOrder(order: Order, product: ProductToOrder, price: number, user: User) {
+        if (!product) return console.error("Product is undefined")
         product.finalPrice = price
         const index = order.products.findIndex(p => p.product.id === product.product.id)
-        if (index === -1) return
+        if (index === -1) return console.error("Product not found in order")
         order.products[index] = product
         await api.updateOrder(order)
-        update(orders => {
-            const orderIndex = orders.findIndex(o => o.id === order.id)
-            if (orderIndex === -1) return orders
-            orders[orderIndex] = order
-            return orders
-        })
+        fetchData(user)
     }
     function setOrderStatus(orderId: string, status: OrderStatus) {
         update(orders => {
@@ -119,8 +113,6 @@ export function createOrdersStore() {
     function setOrders(orders: Order[]) {
         set(orders)
     }
-
-
     async function fetchData(user: User) {
         setOrders(await api.getOrders(user))
     }

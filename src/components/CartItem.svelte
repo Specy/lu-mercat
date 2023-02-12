@@ -5,7 +5,7 @@
 	import { createEventDispatcher } from 'svelte';
 	import Icon from './layout/Icon.svelte';
 	export let item: ProductToOrder;
-    let el: HTMLElement;
+	let el: HTMLElement;
 	let x = 0;
 	let max = 100;
 	let isDragging = false;
@@ -23,7 +23,6 @@
 	function clamp(x: number, min: number, max: number) {
 		return Math.min(Math.max(x, min), max);
 	}
-
 	const dispatcher = createEventDispatcher<{ setPrice: number }>();
 </script>
 
@@ -41,31 +40,38 @@
 {/if}
 
 <div class="cart-item" class:checkedOut={item.finalPrice}>
-	<div 
-        class="draggable" class:isDragging style="transform: translateX({clamp(x, -max, max)}px)" bind:this={el}
-        on:pointerleave={onLeave}
-        on:pointerup={onLeave}
-    >
+	<div
+		class="draggable"
+		class:isDragging
+		style="transform: translateX({clamp(x, -max, max)}px)"
+		bind:this={el}
+		on:pointerleave={onLeave}
+		on:pointerup={onLeave}
+	>
 		<div class="name">
 			x{item.quantity} - {item.product.name}
 		</div>
-		<div
-			class="drag-icon column"
-			on:pointerdown={(e) => {
-				max = Math.min(el.clientWidth / 3, 16 * 5.5);
-				e.preventDefault();
-				isDragging = true;
-			}}
-
-			on:pointermove={(e) => {
-				if (!isDragging) return;
-				e.preventDefault();
-				x = clamp(x + e.movementX, -max, 0);
-			}}
-		>
-			<Icon>
-                <FaArrowLeft />
-            </Icon>
+		<div class="row" style="gap: 0.8rem">
+			<div class="price">
+				{item.finalPrice ? item.finalPrice : item.product.price}€
+			</div>
+			<div
+				class="drag-icon column"
+				on:pointerdown={(e) => {
+					max = Math.min(el.clientWidth / 3, 16 * 5.5);
+					e.preventDefault();
+					isDragging = true;
+				}}
+				on:pointermove={(e) => {
+					if (!isDragging) return;
+					e.preventDefault();
+					x = clamp(x + e.movementX, -max, 0);
+				}}
+			>
+				<Icon>
+					<FaArrowLeft />
+				</Icon>
+			</div>
 		</div>
 	</div>
 	<div class="bg" class:isDragging class:left={x < 0}>Confirm</div>
@@ -83,7 +89,7 @@
 		background-color: var(--secondary);
 		width: 100%;
 		height: 100%;
-		z-index: 10;
+		z-index: 2;
 		top: 0;
 		left: 0;
 		&.isDragging {
@@ -96,8 +102,8 @@
 		border-left: solid 0.1rem var(--secondary-text);
 		height: 100%;
 		touch-action: none;
-        align-items: center;
-        justify-content: center;
+		align-items: center;
+		justify-content: center;
 	}
 	.cart-item {
 		border: solid 0.2rem transparent;
@@ -109,7 +115,7 @@
 		border-radius: 0.8rem;
 	}
 	.checkedOut {
-		border-color: green;
+		border-color: var(--green);
 	}
 	.bg {
 		position: absolute;

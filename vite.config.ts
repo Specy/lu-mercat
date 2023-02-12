@@ -6,13 +6,6 @@ const config: UserConfig = {
 	server: {
 		port: 3000,
 	},
-	resolve: {
-		alias: {
-			$cmp: resolve('./src/components/'),
-			$stores: resolve('./src/stores/'),
-			$utils: resolve('./src/utils/')
-		}
-	},
 	plugins: [
 		sveltekit(),
 	],

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { ordersStore, OrderStatus } from '$stores/orders';
-	import { page } from '$app/stores';
 	import ButtonLink from '$cmp/buttons/ButtonLink.svelte';
 	import CartItem from '$cmp/CartItem.svelte';
 	import Button from '$cmp/buttons/Button.svelte';
@@ -8,9 +7,11 @@
 	import Page from '$cmp/layout/Page.svelte';
 	import { Prompt } from '$stores/promptStore';
 	import { toast } from '$stores/toastStore';
+	import type { PageData } from './$types';
 
-	let order = ordersStore.findByOrderId($page.params.orderId);
-	$: console.log(order);
+	export let data: PageData;
+	let order = data.props.order;
+	$: order = $ordersStore.find((o) => o.id === data.props.order?.id);
 </script>
 
 <Page>
@@ -25,7 +26,7 @@
 					<CartItem
 						{item}
 						on:setPrice={(e) => {
-							ordersStore.confimProdultPriceInOrder(order, item, e.detail);
+							ordersStore.confimProdultPriceInOrder(order, item, e.detail, $userStore);
 						}}
 					/>
 				{/each}

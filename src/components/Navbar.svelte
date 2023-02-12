@@ -141,7 +141,7 @@
 		left: 0;
 		justify-content: space-between;
 		display: flex;
-		z-index: 2;
+		z-index: 10;
 		align-items: center;
 		backdrop-filter: blur(0.4rem);
 		background-color: rgba(var(--RGB-secondary), 0.8);
@@ -190,7 +190,7 @@
 		transform: translateX(100%);
 		transition: all 0.2s;
 		gap: 1rem;
-		z-index: 2;
+		z-index: 10;
 		padding: 1rem;
 		flex-direction: column;
 		gap: 1rem;

@@ -80,6 +80,9 @@ export class Db extends Dexie {
     async getProducts() {
         return await this.products.toArray()
     }
+    async getOrder(id: string) {
+        return await this.orders.get(id)
+    }
     async getCategories() {
         return await this.categories.toArray()
     }
@@ -96,13 +99,16 @@ export class Db extends Dexie {
         }
         if (user.role === UserRole.Delegate){
             const delegatedOrders = await this.orders.where({ ordererId: user.id }).toArray()
-            for(const order of delegatedOrders){
-                if(!result.find(o => o.id === order.id)){
-                    result.push(order)
-                }
-            }
+            result.push(...delegatedOrders)
         }
-        return result
+        //remove duplicates
+        const ids = new Set()
+        const filtered = result.filter(order => {
+            if (ids.has(order.id)) return false
+            ids.add(order.id)
+            return true
+        })
+        return filtered
     }
     async getAllConsumers() {
         return await this.users.where({ role: UserRole.Customer }).toArray()
