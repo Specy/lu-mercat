@@ -6,7 +6,7 @@
     "display": "fullscreen",
     "scope": "/",
     "start_url": "/",
-    "description": "Write, learn and run M68K assembly code on your browser. View registers and memory, step and undo the program.",
+    "description": "Lu mercat is a web application that allows you to buy simple products in borgo villages.",
     "icons": [
         {
             "src": "/icons/favicon-16x16.png",
@@ -19,6 +19,10 @@
         },{
             "src": "/icons/favicon-96x96.png",
             "sizes": "96x96",
+            "type": "image/png"
+        },{
+            "src": "/icons/favicon-180x180.png",
+            "sizes": "180x180",
             "type": "image/png"
         }
     ]
